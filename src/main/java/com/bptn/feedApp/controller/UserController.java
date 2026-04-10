@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bptn.feedApp.service.UserService;
+import tools.jackson.databind.JsonNode;
 import java.util.List;
 import java.util.Optional;
 import com.bptn.feedApp.jpa.User;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+
 
 //REpresentational State Transfer
 @CrossOrigin(exposedHeaders = "Authorization")
@@ -101,5 +103,13 @@ public class UserController {
 	public void sendResetPasswordEmail(@PathVariable String emailId) {
 	        logger.debug("Sending Reset Password Email, emailId: {}", emailId);
 	        this.userService.sendResetPasswordEmail(emailId);
+	}
+	
+	@PostMapping("/reset")
+	public void passwordReset(@RequestBody JsonNode json) {
+
+	    logger.debug("Resetting Password, password: {}", json.get("password").asText());
+
+	    this.userService.resetPassword(json.get("password").asText());
 	}
 }
